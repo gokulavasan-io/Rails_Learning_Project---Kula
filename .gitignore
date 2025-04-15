@@ -1,0 +1,63 @@
+# Ignore bundler config.
+*.gem
+.bundle/
+
+# Ignore logs.
+log/*
+!log/.keep
+
+# Ignore temporary files.
+tmp/*
+!tmp/.keep
+
+# Ignore cached files and compiled assets.
+public/assets
+public/packs
+public/packs-test
+node_modules/
+
+# Ignore database files.
+db/*.sqlite3
+db/*.sqlite3-journal
+
+# Ignore secrets, credentials, and configuration files.
+config/credentials.yml.enc
+config/master.key
+config/database.yml
+
+# Ignore test files that are generated during testing.
+test/tmp/
+test/version_tmp/
+
+# Ignore local development environment files.
+.env
+.env.local
+.env.test
+.env.development
+.env.production
+
+# Ignore system files.
+.DS_Store
+*.swp
+*.swo
+
+# Ignore by default IDEs and editor-specific files.
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.iml
+
+# Ignore Rails-specific files.
+coverage/
+*.rbc
+capybara-*.html
+.ruby-version
+.ruby-gemset
+
+# Ignore any backup files.
+*~
+*.bak
+*.orig
+
+/vendor
