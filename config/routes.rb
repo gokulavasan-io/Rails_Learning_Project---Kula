@@ -3,6 +3,9 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :users, only: [:index, :create,:show]
       resources :products
+      resources :orders do
+        resources :order_item, only:[:create,:update,:destroy]
+      end
     end
   end
 end
