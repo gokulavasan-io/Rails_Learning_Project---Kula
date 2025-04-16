@@ -1,7 +1,7 @@
 class Api::V1::UsersController < ApplicationController
   def index
     users = User.all
-    render json: serialize_users(users)
+    render json: serialize_user(users)
   end
 
   def create
@@ -25,10 +25,6 @@ class Api::V1::UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:name, :email, :password)
-  end
-
-  def serialize_users(users)
-    users.as_json(only: [:id, :name, :email])
   end
 
   def serialize_user(user)
