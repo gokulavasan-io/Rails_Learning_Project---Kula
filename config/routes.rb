@@ -6,6 +6,9 @@ Rails.application.routes.draw do
       resources :orders do
         resources :order_items, only:[:create,:update,:destroy]
       end
+      get 'cart', to: 'carts#show'
+      post 'cart/add', to: 'carts#add_item'
+      delete 'cart/remove', to: 'carts#remove_item'
     end
   end
 end
