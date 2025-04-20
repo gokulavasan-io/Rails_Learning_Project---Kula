@@ -20,10 +20,8 @@ RSpec.describe "Users API", type: :request do
 
   describe "GET /api/v1/users/:id" do
     it "returns the user when authenticated" do
-      token = JsonWebToken.encode(user_id: user.id)
-      get "/api/v1/users/#{user.id}", headers: {
-        "Authorization" => "Bearer #{token}"
-      }
+      get "/api/v1/users/#{user.id}", headers: auth_headers(user)
+
 
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)
