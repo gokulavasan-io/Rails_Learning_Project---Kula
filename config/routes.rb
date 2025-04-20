@@ -9,6 +9,8 @@ Rails.application.routes.draw do
       get 'cart', to: 'carts#show'
       post 'cart/add', to: 'carts#add_item'
       delete 'cart/remove', to: 'carts#remove_item'
+
+      post 'login', to: 'auth#login'
     end
   end
 end
