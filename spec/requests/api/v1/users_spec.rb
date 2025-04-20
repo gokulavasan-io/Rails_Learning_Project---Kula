@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Users API", type: :request do
+RSpec.describe 'Api::V1::Users', type: :request do
   let!(:user) { create(:user) }
 
   describe "POST /api/v1/users" do

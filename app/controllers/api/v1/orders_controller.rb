@@ -26,7 +26,9 @@ class Api::V1::OrdersController < ApplicationController
 
   def update
     order = Order.find_by(id: params[:id])
-    if order && order.update(order_params)
+    return render json: { error: 'Order not found' }, status: :not_found unless order
+  
+    if order.update(order_params)
       render json: order
     else
       render json: { errors: order.errors.full_messages }, status: :unprocessable_entity
@@ -35,12 +37,10 @@ class Api::V1::OrdersController < ApplicationController
 
   def destroy
     order = Order.find_by(id: params[:id])
-    if order
-      order.destroy
-      head :no_content
-    else
-      render json: { errors: order.errors.full_messages }, status: :not_found
-    end
+    return render json: { error: 'Order not found' }, status: :not_found unless order
+  
+    order.destroy
+    head :no_content
   end
 
   private
