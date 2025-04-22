@@ -54,3 +54,4 @@ end
 gem "rspec-rails", "~> 7.1"
 gem 'jwt', '~> 2.10'
 
+gem 'mysql2', '~> 0.5.6'

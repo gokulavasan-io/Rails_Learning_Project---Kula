@@ -11,9 +11,9 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.0].define(version: 2025_04_16_183509) do
-  create_table "cart_items", force: :cascade do |t|
-    t.integer "cart_id", null: false
-    t.integer "product_id", null: false
+  create_table "cart_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "cart_id", null: false
+    t.bigint "product_id", null: false
     t.integer "quantity"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -21,40 +21,40 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_16_183509) do
     t.index ["product_id"], name: "index_cart_items_on_product_id"
   end
 
-  create_table "carts", force: :cascade do |t|
-    t.integer "user_id", null: false
+  create_table "carts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_carts_on_user_id"
   end
 
-  create_table "order_items", force: :cascade do |t|
+  create_table "order_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "quantity"
-    t.integer "order_id", null: false
-    t.integer "product_id", null: false
+    t.bigint "order_id", null: false
+    t.bigint "product_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["order_id"], name: "index_order_items_on_order_id"
     t.index ["product_id"], name: "index_order_items_on_product_id"
   end
 
-  create_table "orders", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.decimal "total_price"
+  create_table "orders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.decimal "total_price", precision: 10
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
-  create_table "products", force: :cascade do |t|
+  create_table "products", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.text "description"
-    t.decimal "price"
+    t.decimal "price", precision: 10
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "email"
     t.datetime "created_at", null: false
