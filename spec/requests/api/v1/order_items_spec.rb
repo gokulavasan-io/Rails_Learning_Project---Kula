@@ -1,9 +1,52 @@
 require 'rails_helper'
 
-RSpec.describe "Api::V1::OrderItems", type: :request do
-  describe "GET /index" do
-    it "is going to add" do
-        #skipped
+RSpec.describe 'Api::V1::OrderItems', type: :request do
+  let!(:user) { create(:user) }
+  let!(:product) { create(:product) }
+  let!(:order) { create(:order, user: user) }
+  let!(:order_item) { create(:order_item, order: order, product: product) }
+  let(:headers) { auth_headers(user) }
+
+  describe 'POST /api/v1/orders/:order_id/order_items' do
+    it 'creates a new order item' do
+      post "/api/v1/orders/#{order.id}/order_items",
+           params: { order_item: { product_id: product.id, quantity: 2, order_id: order.id } },
+           headers: headers
+
+      expect(response).to have_http_status(:created)
+      expect(json_response['order_id']).to eq(order.id)
+      expect(json_response['product_id']).to eq(product.id)
+      expect(json_response['quantity']).to eq(2)
     end
+  end
+
+  describe 'PUT /api/v1/orders/:order_id/order_items/:id' do
+    it 'updates the quantity of the order item' do
+      put "/api/v1/orders/#{order.id}/order_items/#{order_item.id}",
+          params: { order_item: { quantity: 5 } },
+          headers: headers
+
+      expect(response).to have_http_status(:ok)
+      expect(json_response['quantity']).to eq(5)
+    end
+  end
+
+  describe 'DELETE /api/v1/orders/:order_id/order_items/:id' do
+    it 'deletes the order item' do
+      delete "/api/v1/orders/#{order.id}/order_items/#{order_item.id}", headers: headers
+
+      expect(response).to have_http_status(:no_content)
+      expect(OrderItem.exists?(order_item.id)).to be_falsey
+    end
+
+    it 'returns 404 if order_item does not exist' do
+      delete "/api/v1/orders/#{order.id}/order_items/9999", headers: headers
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  def json_response
+    JSON.parse(response.body)
   end
 end
