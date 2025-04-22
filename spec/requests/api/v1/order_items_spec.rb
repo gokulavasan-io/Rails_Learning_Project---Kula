@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe "Api::V1::OrderItems", type: :request do
   describe "GET /index" do
-    pending "add some examples (or delete) #{__FILE__}"
+    it "is going to add" do
+        #skipped
+    end
   end
 end

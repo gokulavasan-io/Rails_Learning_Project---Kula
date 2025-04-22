@@ -15,6 +15,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
 
       expect(response).to have_http_status(:created)
       expect(JSON.parse(response.body)).to include("token")
+      expect(JSON.parse(response.body)["token"]).to be_a(String)
     end
   end
 
