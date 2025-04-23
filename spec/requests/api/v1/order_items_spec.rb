@@ -15,7 +15,7 @@ RSpec.describe 'Api::V1::OrderItems', type: :request do
           headers: headers
 
       expect(response).to have_http_status(:ok)
-      expect(json_response['quantity']).to eq(5)
+      expect(json_response["message"]).to eq("Order Item Updated successfully")
     end
   end
 

@@ -19,8 +19,7 @@ RSpec.describe 'Api::V1::Carts', type: :request do
       it 'adds the item to the cart' do
         post '/api/v1/cart/add', params: { product_id: product.id, quantity: 2 }, headers: headers
         expect(response).to have_http_status(:ok)
-        expect(json_response['product_id']).to eq(product.id)
-        expect(json_response['quantity'].to_i).to eq(2)
+        expect(json_response['message']).to eq('Product added to Cart successfully')
       end
     end
 

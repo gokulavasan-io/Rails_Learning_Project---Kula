@@ -51,6 +51,9 @@ group :development, :test do
 
   gem 'pry'
   gem 'pry-byebug'
+
+  gem 'redis'
+  gem 'mock_redis'
 end
 
 

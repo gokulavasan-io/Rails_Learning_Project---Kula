@@ -11,7 +11,7 @@ class Api::V1::CartsController < ApplicationController
       item.quantity = item.quantity || 0
       item.quantity += params[:quantity].to_i
       item.save!
-      render json: { product_id: product.id, quantity: params[:quantity] }, status: :ok
+      render json: { "message":"Product added to Cart successfully" }, status: :ok
   rescue ActiveRecord::RecordNotFound
       render json: { error: "Product not found" }, status: :not_found
   end
