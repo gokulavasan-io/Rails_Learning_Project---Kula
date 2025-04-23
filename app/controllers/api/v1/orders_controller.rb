@@ -1,13 +1,13 @@
 class Api::V1::OrdersController < ApplicationController
 
   def index
-    orders = Order.includes(:order_items).all
+    orders = @current_user.orders.all
     render json: serialize_order(orders)
   end
 
   def show
     order = Order.includes(:order_items).find_by(id: params[:id])
-  
+
     if order
       render json: serialize_order(order)
     else
