@@ -18,7 +18,8 @@ class Api::V1::OrdersController < ApplicationController
   def create
     order = Order.new(order_params)
     if order.save
-      render json: order, status: :created
+      OrderMailer.order_confirmation(order).deliver_later
+      render json: {"message":"Order Placed successfully."}, status: :created
     else
       render json: { errors: order.errors.full_messages }, status: :unprocessable_entity
     end
