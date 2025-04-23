@@ -7,18 +7,6 @@ RSpec.describe 'Api::V1::OrderItems', type: :request do
   let!(:order_item) { create(:order_item, order: order, product: product) }
   let(:headers) { auth_headers(user) }
 
-  describe 'POST /api/v1/orders/:order_id/order_items' do
-    it 'creates a new order item' do
-      post "/api/v1/orders/#{order.id}/order_items",
-           params: { order_item: { product_id: product.id, quantity: 2, order_id: order.id } },
-           headers: headers
-
-      expect(response).to have_http_status(:created)
-      expect(json_response['order_id']).to eq(order.id)
-      expect(json_response['product_id']).to eq(product.id)
-      expect(json_response['quantity']).to eq(2)
-    end
-  end
 
   describe 'PUT /api/v1/orders/:order_id/order_items/:id' do
     it 'updates the quantity of the order item' do

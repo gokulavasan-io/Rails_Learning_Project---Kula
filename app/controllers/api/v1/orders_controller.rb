@@ -46,8 +46,13 @@ class Api::V1::OrdersController < ApplicationController
   private
 
   def order_params
-    params.require(:order).permit(:user_id, :total_price)
+    params.require(:order).permit(
+      :user_id,
+      :total_price,
+      order_items_attributes: [:product_id, :quantity]
+    )
   end
+  
 
   def serialize_order(order)
     order.as_json(

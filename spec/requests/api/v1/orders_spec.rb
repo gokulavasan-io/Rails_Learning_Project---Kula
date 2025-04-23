@@ -4,6 +4,7 @@ RSpec.describe 'Api::V1::Orders', type: :request do
   let!(:user) { create(:user) }
   let!(:order) { create(:order, user: user) }
   let!(:order_item) { create(:order_item, order: order) }
+  let!(:product) {create(:product)}
   let(:headers) { auth_headers(user) }
 
   describe 'GET /api/v1/orders' do
@@ -35,7 +36,7 @@ RSpec.describe 'Api::V1::Orders', type: :request do
   describe 'POST /api/v1/orders' do
     context 'when the order is valid' do
       it 'creates a new order' do
-        order_params = { user_id: user.id, total_price: 100.0 }
+        order_params = { user_id: user.id, total_price: 100.0,order_items_attributes:[{product_id: product.id, quantity:5 }] }
         post "/api/v1/orders", params: { order: order_params }, headers: headers
         expect(response).to have_http_status(:created)
         expect(json_response['total_price'].to_f).to eq(100.0)
@@ -44,7 +45,7 @@ RSpec.describe 'Api::V1::Orders', type: :request do
 
     context 'when the order is invalid' do
       it 'returns unprocessable entity with errors' do
-        post "/api/v1/orders", params: { order: { user_id: nil, total_price: nil } }, headers: headers
+        post "/api/v1/orders", params: { order: { user_id: nil, total_price: nil, order_items_attributes:[{product_id: product.id, quantity:5 }]}}, headers: headers
         expect(response).to have_http_status(:unprocessable_entity)
         expect(json_response['errors']).to include("User must exist", "Total price can't be blank")
       end

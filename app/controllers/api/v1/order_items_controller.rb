@@ -1,12 +1,4 @@
 class Api::V1::OrderItemsController < ApplicationController
-  def create
-    order_item = OrderItem.new(order_item_params)
-    if order_item.save
-      render json: order_item, status: :created
-    else
-      render json: order_item.errors, status: :unprocessable_entity
-    end
-  end
 
   def update
     order_item = OrderItem.find_by(id: params[:id])
