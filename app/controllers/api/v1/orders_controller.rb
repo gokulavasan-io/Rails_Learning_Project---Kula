@@ -17,6 +17,7 @@ class Api::V1::OrdersController < ApplicationController
 
   def create
     order = Order.new(order_params)
+    order.user_id=@current_user.id
     if order.save
       OrderMailer.order_confirmation(order).deliver_later
       render json: { "message":"Order Placed successfully"}, status: :created
@@ -48,7 +49,6 @@ class Api::V1::OrdersController < ApplicationController
 
   def order_params
     params.require(:order).permit(
-      :user_id,
       :total_price,
       order_items_attributes: [:product_id, :quantity]
     )

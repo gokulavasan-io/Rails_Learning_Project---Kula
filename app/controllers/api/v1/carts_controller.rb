@@ -1,7 +1,7 @@
 class Api::V1::CartsController < ApplicationController
   def show
     cart = @current_user.cart
-    render json: cart.as_json(include: { cart_items: { include: :product } })
+    render json: serialize_cart(cart)
   end
 
   def add_item
@@ -23,4 +23,29 @@ class Api::V1::CartsController < ApplicationController
   rescue ActiveRecord::RecordNotFound
       render json: { error: "Item not found" }, status: :not_found
   end
+
+  private
+
+  # def serialize_cart(cart)
+  #   cart.as_json(
+  #     only:[],
+  #     include: {
+  #       cart_items: {
+  #         only: [:quantity],
+  #         methods: [:product_name, :product_price]
+  #       }
+  #     }
+  #   )
+  # end
+
+  def serialize_cart(cart)
+    cart.cart_items.map do |item|
+      {
+        quantity: item.quantity,
+        product_name: item.product_name,
+        product_price: item.product_price
+      }
+    end
+  end
+  
 end
