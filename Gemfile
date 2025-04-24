@@ -54,6 +54,7 @@ group :development, :test do
 
   gem 'redis'
   gem 'mock_redis'
+  gem 'letter_opener'
 end
 
 
@@ -63,4 +64,5 @@ gem 'jwt', '~> 2.10'
 gem 'mysql2', '~> 0.5.6'
 
 gem 'sidekiq'
+
 
