@@ -30,5 +30,9 @@ module KulaProject
     config.api_only = true
 
     config.active_job.queue_adapter = :sidekiq
+    # Enable sessions for Sidekiq Web UI
+config.middleware.use ActionDispatch::Cookies
+config.middleware.use ActionDispatch::Session::CookieStore, key: '123'
+
   end
 end
