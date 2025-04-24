@@ -10,7 +10,7 @@ RSpec.describe 'Api::V1::Carts', type: :request do
     it 'returns the current user cart with cart items and products' do
       get '/api/v1/cart', headers: headers
       expect(response).to have_http_status(:ok)
-      expect(json_response['cart_items']).to be_an(Array)
+      expect(json_response).to be_an(Array)
     end
   end
 

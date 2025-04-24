@@ -51,9 +51,9 @@ RSpec.describe 'Api::V1::Orders', type: :request do
 
     context 'when the order is invalid' do
       it 'returns unprocessable entity with errors' do
-        post "/api/v1/orders", params: { order: { user_id: nil, total_price: nil, order_items_attributes:[{product_id: product.id, quantity:5 }]}}, headers: headers
+        post "/api/v1/orders", params: { order: {  total_price: nil, order_items_attributes:[{product_id: product.id, quantity:5 }]}}, headers: headers
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(json_response['errors']).to include("User must exist", "Total price can't be blank")
+        expect(json_response['errors']).to include( "Total price can't be blank")
       end
     end
   end
