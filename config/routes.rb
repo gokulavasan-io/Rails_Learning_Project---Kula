@@ -7,11 +7,9 @@ Rails.application.routes.draw do
       resources :users, only: [:index, :create,:show]
       resources :products
       resources :orders do
-        resources :order_items, only:[:create,:update,:destroy]
+        resources :order_items, only:[:update,:destroy]
       end
-      get 'cart', to: 'carts#show'
-      post 'cart/add', to: 'carts#add_item'
-      delete 'cart/remove', to: 'carts#remove_item'
+      resource :cart
 
       post 'login', to: 'auth#login'
 

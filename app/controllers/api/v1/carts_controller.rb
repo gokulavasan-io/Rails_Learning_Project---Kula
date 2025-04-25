@@ -4,7 +4,7 @@ class Api::V1::CartsController < ApplicationController
     render json: serialize_cart(cart)
   end
 
-  def add_item
+  def update
     cart = @current_user.cart
     product = Product.find(params[:product_id])
       item = cart.cart_items.find_or_create_by(product: product)
@@ -16,7 +16,7 @@ class Api::V1::CartsController < ApplicationController
       render json: { error: "Product not found" }, status: :not_found
   end
 
-  def remove_item
+  def destroy
     cart_item = @current_user.cart.cart_items.find_by!(product_id: params[:product_id])
     cart_item.destroy
     render json: { message: "Item removed" }, status: :ok
