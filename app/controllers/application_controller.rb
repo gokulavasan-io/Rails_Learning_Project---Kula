@@ -3,7 +3,6 @@ class ApplicationController < ActionController::API
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   rescue_from ActiveRecord::RecordInvalid, with: :unprocessable_record
-  rescue_from StandardError, with: :handle_standard_error
 
   private
 
@@ -23,14 +22,11 @@ class ApplicationController < ActionController::API
   end
 
   def record_not_found(error)
-    render json: { error: error.message }, status: :not_found
+    render json: { notfounderror: error.message }, status: :not_found
   end
 
   def unprocessable_record(exception)
     render json: { errors: exception.record.errors.full_messages }, status: :unprocessable_entity
   end
 
-  def handle_standard_error(error)
-    render json: { error: "Something went wrong: #{error.message}" }, status: :internal_server_error
-  end
 end

@@ -1,18 +1,23 @@
 class Api::V1::CartsController < ApplicationController
   before_action :set_cart
-  before_action :set_product, only: [ :update ]
-  before_action :set_cart_item, only: [ :destroy ]
+  before_action :set_product, only: [ :create ]
+  before_action :set_cart_item, only: [ :update, :destroy ]
 
   def show
     render json: serialize_cart(@cart)
   end
 
-  def update
-    item = @cart.cart_items.find_or_create_by(product: @product)
-    item.quantity ||= 0
-    item.quantity += params[:quantity].to_i
+  def create
+    item = @cart.cart_items.find_or_initialize_by(product: @product)
+    item.quantity = (item.quantity || 0) + params[:quantity].to_i
     item.save!
-    render json: { "message": "Product added to Cart successfully" }, status: :ok
+    render json: { "message": "Product added to Cart successfully" }, status: :created
+  end
+
+  def update
+    @cart_item.quantity = params[:quantity].to_i
+    @cart_item.save!
+    render json: { "message": "Cart Updated successfully" }, status: :ok
   end
 
   def destroy
@@ -23,15 +28,15 @@ class Api::V1::CartsController < ApplicationController
   private
 
   def set_cart
-    @cart = @current_user.cart.includes(cart_items: :product)
+    @cart = @current_user.cart
   end
 
   def set_product
-    @product = Product.find_by(id: params[:product_id])
+    @product = Product.find(params[:product_id])
   end
 
   def set_cart_item
-    @cart_item = @cart.cart_items.find_by(product_id: params[:product_id])
+    @cart_item = @cart.cart_items.find_by!(product_id: params[:product_id])
   end
 
   def serialize_cart(cart)
