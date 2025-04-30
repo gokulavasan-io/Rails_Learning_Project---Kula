@@ -28,15 +28,18 @@ class Api::V1::CartsController < ApplicationController
   private
 
   def set_cart
-    @cart = @current_user.cart
+    @cart = Cart.includes(cart_items: :product).find_by(user_id: @current_user.id)
   end
 
   def set_product
-    @product = Product.find(params[:product_id])
+    @product = Rails.cache.fetch("products/#{params[:id]}", expires_in: 10.minutes) do
+      Product.find(params[:id])
+    end
   end
 
   def set_cart_item
-    @cart_item = @cart.cart_items.find_by!(product_id: params[:product_id])
+    @cart_item = @cart.cart_items.find { |item| item.product_id == params[:product_id].to_i }
+    raise ActiveRecord::RecordNotFound unless @cart_item
   end
 
   def serialize_cart(cart)
