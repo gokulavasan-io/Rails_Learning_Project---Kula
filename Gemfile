@@ -58,7 +58,7 @@ group :development, :test do
 end
 
 
-gem "rspec-rails", "~> 7.1"
+gem "rspec-rails", "~> 8.0"
 gem 'jwt', '~> 2.10'
 
 gem 'mysql2', '~> 0.5.6'
