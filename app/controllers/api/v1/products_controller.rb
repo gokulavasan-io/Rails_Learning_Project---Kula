@@ -1,47 +1,54 @@
 class Api::V1::ProductsController < ApplicationController
-      def index
-        products = Product.all
-        render json: serialize_product(products)
-      end
+  before_action :set_product, only: [ :show, :update, :destroy ]
 
-      def show
-        product = Product.find(params[:id])
-        render json: serialize_product(product)
-      end
+  def index
+    products = Rails.cache.fetch("products/index", expires_in: 10.minutes) do
+      Product.all.to_a
+    end
+    render json: serialize_product(products)
+  end
 
-      def create
-        product = Product.new(product_params)
-        if product.save
-          render json: serialize_product(product), status: :created
-        else
-          render json: { errors: product.errors.full_messages }, status: :unprocessable_entity
-        end
-      end
+  def show
+    render json: serialize_product(@product)
+  end
 
+  def create
+    product = Product.new(product_params)
+    product.save!
 
-      def update
-        product = Product.find(params[:id])
-        if product.update(product_params)
-          render json: serialize_product(product)
-        else
-          render json: { errors: product.errors.full_messages }, status: :unprocessable_entity
-        end
-      end
+    Rails.cache.delete("products/index")
+    render json: serialize_product(product), status: :created
+  end
 
-      def destroy
-        product = Product.find(params[:id])
-        product.destroy
-        head :no_content
-      end
+  def update
+    @product.update!(product_params)
 
-      private
+    Rails.cache.delete("products/index")
+    Rails.cache.delete("products/#{@product.id}")
+    render json: serialize_product(@product)
+  end
 
+  def destroy
+    @product.destroy
 
-      def product_params
-        params.require(:product).permit(:name, :description, :price)
-      end
+    Rails.cache.delete("products/index")
+    Rails.cache.delete("products/#{@product.id}")
+    head :no_content
+  end
 
-      def serialize_product(product)
-        product.as_json(only: [:id, :name, :price, :description])
-      end
+  private
+
+  def set_product
+    @product = Rails.cache.fetch("products/#{params[:id]}", expires_in: 10.minutes) do
+      Product.find(params[:id])
+    end
+  end
+
+  def product_params
+    params.require(:product).permit(:name, :description, :price)
+  end
+
+  def serialize_product(product)
+    product.as_json(only: [ :id, :name, :price, :description ])
+  end
 end

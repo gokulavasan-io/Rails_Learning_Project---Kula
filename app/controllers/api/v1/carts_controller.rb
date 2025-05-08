@@ -1,42 +1,46 @@
 class Api::V1::CartsController < ApplicationController
+  before_action :set_cart
+  before_action :set_product, only: [ :create ]
+  before_action :set_cart_item, only: [ :update, :destroy ]
+
   def show
-    cart = @current_user.cart
-    render json: serialize_cart(cart)
+    render json: serialize_cart(@cart)
   end
 
-  def add_item
-    cart = @current_user.cart
-    product = Product.find(params[:product_id])
-      item = cart.cart_items.find_or_create_by(product: product)
-      item.quantity = item.quantity || 0
-      item.quantity += params[:quantity].to_i
-      item.save!
-      render json: { "message":"Product added to Cart successfully" }, status: :ok
-  rescue ActiveRecord::RecordNotFound
-      render json: { error: "Product not found" }, status: :not_found
+  def create
+    item = @cart.cart_items.find_or_initialize_by(product: @product)
+    item.quantity = (item.quantity || 0) + params[:quantity].to_i
+    item.save!
+    render json: { "message": "Product added to Cart successfully" }, status: :created
   end
 
-  def remove_item
-    cart_item = @current_user.cart.cart_items.find_by!(product_id: params[:product_id])
-    cart_item.destroy
-    render json: { message: "Item removed" }, status: :ok
-  rescue ActiveRecord::RecordNotFound
-      render json: { error: "Item not found" }, status: :not_found
+  def update
+    @cart_item.quantity = params[:quantity].to_i
+    @cart_item.save!
+    render json: { "message": "Cart Updated successfully" }, status: :ok
+  end
+
+  def destroy
+    @cart_item.destroy
+    head :no_content
   end
 
   private
 
-  # def serialize_cart(cart)
-  #   cart.as_json(
-  #     only:[],
-  #     include: {
-  #       cart_items: {
-  #         only: [:quantity],
-  #         methods: [:product_name, :product_price]
-  #       }
-  #     }
-  #   )
-  # end
+  def set_cart
+    @cart = Cart.includes(cart_items: :product).find_by(user_id: @current_user.id)
+  end
+
+  def set_product
+    @product = Rails.cache.fetch("products/#{params[:id]}", expires_in: 10.minutes) do
+      Product.find(params[:id])
+    end
+  end
+
+  def set_cart_item
+    @cart_item = @cart.cart_items.find { |item| item.product_id == params[:product_id].to_i }
+    raise ActiveRecord::RecordNotFound unless @cart_item
+  end
 
   def serialize_cart(cart)
     cart.cart_items.map do |item|
@@ -47,5 +51,4 @@ class Api::V1::CartsController < ApplicationController
       }
     end
   end
-  
 end
